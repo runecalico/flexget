@@ -1,0 +1,9 @@
+tasks:
+  Cleanup_Error torrents:
+    from_deluge: yes
+    disable: [seen, seen_info_hash]
+    # Remove all torrents that are in an Error state
+    if:
+      - deluge_state == "Error": accept
+    deluge:
+      action: remove

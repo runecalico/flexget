@@ -1,0 +1,92 @@
+templates:
+  global:
+    # Limit the frequency of requests to domains so they don't complain about using a bot
+    domain_delay:
+      www.tokyotosho.info: 5 seconds
+      nyaa.si: 5 seconds
+      acgnx.se: 5 seconds
+      tracker.minglong.org: 5 seconds
+      horriblesubs.info: 5 seconds
+      www.anirena.com: 5 seconds
+      feed.animetosho.org: 5 seconds
+      ru.erai-raws.info: 5 seconds
+
+  anime_rss:
+    regexp:
+      accept_excluding:
+        - (1080p|480p|360p|480|Dual Audio|dub|1920x1080|360p|Dual-Audio|Multi-Audio|\[1080\]|DVD5|DVD-Rip|Hentai|BDMV|DVDISO|COSPLAY|Cosplay|.zip|.rar|arabic)
+    deluge:
+      path: /home/user/Downloads
+      move_completed_path:  /home/user/Downloads/finished
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+ 
+
+
+tasks:
+  HorribleSubs:
+    rss: 
+      url: http://horriblesubs.info/rss.php?res=720
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+  # erai-rawsMovies:
+  #   rss: 
+  #     url: https://ru.erai-raws.info/rss-movies-720/
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_rss
+  nyaa:
+    rss: 
+      url: https://nyaa.si/?page=rss&c=1_2&f=0
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+  animetosho:
+    rss: 
+      url: https://feed.animetosho.org/rss2?only_tor=1
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+  # anidex:
+  #   domain_delay:
+  #     anidex.info: 5 seconds     
+  #   headers:
+  #     User-Agent: 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0'
+  #   cfscraper: yes
+  #   rss: 
+  #     url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_rss
+  tokyotosho:
+    rss: 
+      url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+  minglong:
+    rss: 
+      url: http://tracker.minglong.org/rss.xml
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+  acgnx:
+    rss: 
+      url: https://www.acgnx.se/rss-sort-2.xml
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+  anirena:
+    rss: 
+      url: https://www.anirena.com/rss.php?t=2
+      ascii: yes
+      all_entries: no
+    template: anime_rss
+
+schedules:
+  - tasks: '*'
+    interval:
+      hours: 1

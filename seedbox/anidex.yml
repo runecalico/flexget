@@ -1,0 +1,27 @@
+templates:
+  anime_rss:
+    regexp:
+      accept_excluding:
+        - (1080p|480p|360p|480|Dual Audio|dub|1920x1080|360p|Dual-Audio|Multi-Audio|\[1080\]|DVD5|DVD-Rip|Hentai|BDMV|DVDISO|COSPLAY|Cosplay|.zip|.rar|arabic)
+    deluge:
+      path: /home/user/Downloads
+      move_completed_path:  /home/user/Downloads/finished
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+ 
+
+
+tasks:
+  anidex:
+    domain_delay:
+      anidex.info: 5 seconds     
+    headers:
+      User-Agent: 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0'
+    cfscraper: yes
+    rss: 
+      url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
+      ascii: yes
+      all_entries: no
+    template: anime_rss

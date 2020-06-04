@@ -1,0 +1,82 @@
+templates:
+  global:
+    # Limit the frequency of requests to domains so they don't complain about using a bot
+    domain_delay:
+      www.tokyotosho.info: 5 seconds
+      nyaa.si: 5 seconds
+      acgnx.se: 5 seconds
+      tracker.minglong.org: 5 seconds
+      horriblesubs.info: 5 seconds
+      www.anirena.com: 5 seconds
+      feed.animetosho.org: 5 seconds
+      ru.erai-raws.info: 5 seconds
+
+  anime_regexp:
+    regexp:
+      accept_excluding:
+        - (720p|480p|360p|480|Dual Audio|dub|Dual-Audio|Multi-Audio|\[720\]|DVD5|DVD-Rip|Hentai|BDMV|DVDISO|COSPLAY|Cosplay|.zip|.rar|arabic|.iso|horriblesubs)
+    deluge:
+      path: /home/user/Downloads
+      move_completed_path:  /home/user/Downloads/finished
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+
+  animehorriblesubs:
+    regexp:
+      accept_excluding:
+        - (480p|360p|480|Dual Audio|dub|Dual-Audio|Multi-Audio|DVD5|DVD-Rip|Hentai|BDMV|DVDISO|COSPLAY|Cosplay|.zip|.rar|arabic|.iso)
+    deluge:
+      path: /home/user/Downloads
+      move_completed_path:  /home/user/Downloads/finished
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+# Groups I don't want
+# FrozenFruitSubs
+# FreeBooterAnime
+# Rorikon-Fansub-League [RoFL]
+tasks:
+  HorribleSubs:
+    rss: 
+      url: http://horriblesubs.info/rss.php?res=720
+      ascii: yes
+      all_entries: no
+    template: animehorriblesubs
+  nyaa:
+    rss: 
+      url: https://nyaa.si/?page=rss&c=1_2&f=0
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  animetosho:
+    rss: 
+      url: https://feed.animetosho.org/rss2?only_tor=1
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  tokyotosho:
+    rss: 
+      url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  minglong:
+    rss: 
+      url: http://tracker.minglong.org/rss.xml
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  acgnx:
+    rss: 
+      url: https://www.acgnx.se/rss-sort-2.xml
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+
+schedules:
+  - tasks: '*'
+    interval:
+      hours: 1

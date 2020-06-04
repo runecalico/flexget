@@ -1,0 +1,131 @@
+templates:
+  global:
+    # Limit the frequency of requests to domains so they don't complain about using a bot
+    domain_delay:
+      www.tokyotosho.info: 5 seconds
+      nyaa.si: 5 seconds
+      acgnx.se: 5 seconds
+      tracker.minglong.org: 5 seconds
+      horriblesubs.info: 5 seconds
+      www.anirena.com: 5 seconds
+      feed.animetosho.org: 5 seconds
+      ru.erai-raws.info: 5 seconds
+
+  anime_regexp:
+    regexp:
+      reject:
+        - '\[FA\]' # German Subs
+        - '\[RoFL\]'  # German Subs
+        - '\[FrozenFruitSubs\]'  # Russian Subs
+        - '\[HorribleSubs\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[DVD\]' # Usually means ISO Release
+        - '(\[English Dub\])' # I don't want English Dubs
+        - 'FuniDub' # I don't want English Dubs
+        - 'DVD5' # Usually means ISO Release
+        - 'DVD-Rip' # Usually means ISO Release
+        - 'Hentai' # ugh, no
+        - '\[BDMV\]' # Usually means ISO Release
+        - 'DVDISO' # Usually means ISO Release
+        - 'COSPLAY' # I just want video (tho sometimes this stuff is quite good)
+        - 'arabic' # English please
+        - 'English Dubbed' # I don't want English Dubs
+        - '(Dual[- ]Audio)': # I don't want English Dubs
+            not:
+            - 'KOR' # Except sometimes I guess it's Japaneese and KOREAN (vs JPN & ENG)
+        - '\.zip' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.iso' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.exe' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - 'Drama CD' # I just want video
+        - 'Eng-Dub' # I don't want English Dubs
+        - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+            - '(HEVC|x265|\[Anime Time\])'
+        - '1920x1080': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+            - '(HEVC|x265|\[Anime Time\])'
+        - 'UHD': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+            - '(HEVC|x265|\[Anime Time\])'
+        - '2160p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+            - '(HEVC|x265|\[Anime Time\])'
+      from: title
+    accept_all: yes
+    deluge:
+      path: /home/user/Downloads
+      #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+
+  animeerairaws:
+    quality: 720p
+    accept_all: yes
+    deluge:
+      path: /home/user/Downloads
+      #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+
+  animehorriblesubs:
+    accept_all: yes
+    deluge:
+      path: /home/user/Downloads
+      #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+tasks:
+  HorribleSubs:
+    rss:
+      url: http://horriblesubs.info/rss.php?res=720
+      ascii: yes
+      all_entries: no
+    template: animehorriblesubs
+  erairaws:
+    rss:
+      url: https://ru.erai-raws.info/rss-all/
+      ascii: yes
+      all_entries: no
+    template: animeerairaws
+  nyaa:
+    rss:
+      url: https://nyaa.si/?page=rss&c=1_2&f=0
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  animetosho:
+    rss:
+      url: https://feed.animetosho.org/rss2?only_tor=1
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  tokyotosho:
+    rss:
+      url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  minglong:
+    rss:
+      url: http://tracker.minglong.org/rss.xml
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+  acgnx:
+    rss:
+      url: https://www.acgnx.se/rss-sort-2.xml
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
+
+schedules:
+  - tasks: '*'
+    interval:
+      hours: 1

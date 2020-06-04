@@ -1,0 +1,78 @@
+tasks:
+  deluge-dirs:
+    priority: 1
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+      - builtins
+    list_clear:
+      what:
+        - entry_list: deluge-dirs-entry_list
+    from_deluge: yes
+    accept_all: yes
+    list_add:
+      - entry_list: deluge-dirs-entry_list
+
+  deluge-files:
+    priority: 2
+    disable:
+      - seen
+      - seen_info_hash
+      - retry_failed
+      - builtins
+    list_clear:
+      what:
+        - entry_list: deluge-files-entry_list
+    from_deluge: yes
+    accept_all: yes
+    list_add:
+      - entry_list: deluge-files-entry_list
+    manipulate:
+      - filename:
+          from: title
+
+  # This seems to work for directories
+  move-dirs:
+    priority: 3
+    seen: no
+    filesystem:
+      path: '/home/user/Downloads'
+      recursive: no
+      retrieve: dirs
+    crossmatch:
+      from:
+        - entry_list: deluge-dirs-entry_list
+      fields:
+        - title
+      action: reject
+      exact: no
+    accept_all: yes
+    move:
+      to: '/home/user/finished'
+      allow_dir: yes
+
+  move-files:
+    priority: 4
+    seen: no
+    filesystem:
+      path: '/home/user/Downloads'
+      recursive: no
+      regexp: '.*.(avi|mkv|mp4|m4v)$'
+      retrieve: files
+    crossmatch:
+      from:
+        - entry_list: deluge-files-entry_list
+      fields:
+        - filename
+      action: reject
+      exact: no
+    accept_all: yes
+    move:
+      to: '/home/user/finished'
+      allow_dir: yes
+      along:
+        extensions:
+          - srt
+          - ass
+          - sub
