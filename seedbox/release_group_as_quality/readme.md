@@ -1,0 +1,6 @@
+# What was this?
+A failed experiement to see if flexget could be used to shoehorn "quality" rankings for Anime Release Groups using the series plugin.
+### So what actually happens?
+    The Series plugin works fairly well (tho anime poses issues in general it seems) for ensuring you only download an episode once, and as long as you only require the flexget built-in "quality" properties. It can be used to fetch higher quality versions of something as needed.
+    Unfortunately, Flexget doesn't have any way of using anything like release groups as "quality".  So the best I was able to do is get flexget to sort the incoming torrents in an order that puts the release group I want as "highest" quality first... However that only applies to that specific run of flexget, so if you download a "low quality" release group first (speed sub) and there are no "high quality" releases at that time, the series plugin will never understand the "higher quality" of a release group. So unless you do something like download in 720p from the speed subbers and then do 1080p (resolution is a quality flexget supports) .. and even then it still will not really take the release group into account.  Ahh well..
+### I'll keep the code because there are lessons to be learned from it (for me at least)

@@ -1,0 +1,460 @@
+templates:
+  global:
+    # Limit the frequency of requests to domains so they don't complain about using a bot
+    domain_delay:
+      www.tokyotosho.info: 5 seconds
+      nyaa.si: 5 seconds
+      acgnx.se: 5 seconds
+      tracker.minglong.org: 5 seconds
+      horriblesubs.info: 5 seconds
+      www.anirena.com: 5 seconds
+      feed.animetosho.org: 5 seconds
+      ru.erai-raws.info: 5 seconds
+
+  anime_regexp:
+    regexp:
+      reject:
+        - '\[FA\]' # German Subs
+        - '\[RoFL\]'  # German Subs
+        - '\[FrozenFruitSubs\]'  # Russian Subs
+        - '\[HorribleSubs\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[DVD\]' # Usually means ISO Release
+        - '(\[English Dub\])' # I don't want English Dubs
+        - 'FuniDub' # I don't want English Dubs
+        - 'DVD5' # Usually means ISO Release
+        - 'DVD-Rip' # Usually means ISO Release
+        - 'Hentai' # ugh, no
+        - '\[BDMV\]' # Usually means ISO Release
+        - 'DVDISO' # Usually means ISO Release
+        - 'COSPLAY' # I just want video (tho sometimes this stuff is quite good)
+        - 'arabic' # English please
+        - 'English Dubbed' # I don't want English Dubs
+        - '(Dual[- ]Audio)': # I don't want English Dubs
+            not:
+            - 'KOR' # Except sometimes I guess it's Japaneese and KOREAN (vs JPN & ENG)
+        - '\.zip' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.iso' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.exe' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - 'Drama CD' # I just want video
+        - 'Eng-Dub' # I don't want English Dubs
+        - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+            - '(HEVC|x265|\[Anime Time\])'
+        - '1920x1080': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+            - '(HEVC|x265|\[Anime Time\])'
+        - 'UHD': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+            - '(HEVC|x265|\[Anime Time\])'
+        - '2160p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+            - '(HEVC|x265|\[Anime Time\])'
+      from: title
+    accept_all: yes
+
+  animefish:
+    regexp:
+      accept:
+        - '\[Deadfish\]'  # Russian Subs
+      from: title
+    accept_all: yes
+
+  animeerairaws:
+    quality: 720p
+    accept_all: yes
+
+
+  animehorriblesubs:
+    accept_all: yes
+
+
+tasks:
+  HorribleSubs:
+    disable:
+      - seen
+      - seen_info_hash
+    list_clear:
+      what:
+        - entry_list: horriblesubs_list
+        - entry_list: noseries_list  
+    metainfo_series: yes
+    parsing:
+      movie: guessit
+      series: guessit
+    rss:
+      url: http://horriblesubs.info/rss.php?res=720
+      ascii: yes
+      all_entries: no
+    manipulate:
+        - title:
+            replace:
+              regexp: '\s(S)(\d)'
+              format: ' Series \2'
+        - title:
+            replace:
+              regexp: '2nd Season'
+              format: 'Series 2'
+        - title:
+            replace:
+              regexp: '3rd Season'
+              format: 'Series 3'
+        - title:
+            replace:
+              regexp: '4th Season'
+              format: 'Series 4'
+        - title:
+            replace:
+              regexp: '5th Season'
+              format: 'Series 5'
+        - title:
+            replace:
+              regexp: '6th Season'
+              format: 'Series 6'
+        - title:
+            replace:
+              regexp: '7th Season'
+              format: 'Series 7'
+        - title:
+            replace:
+              regexp: '8th Season'
+              format: 'Series 8'
+        - title:
+            replace:
+              regexp: '9th Season'
+              format: 'Series 9'
+        - title:
+            replace:
+              regexp: '10th Season'
+              format: 'Series 10'
+        - title:
+            replace:
+              regexp: '11th Season'
+              format: 'Series 11'
+    set:
+      Mylabel: 20
+    accept_all: yes
+    if:
+      - has_field('series_name'):
+          list_add:
+            - entry_list: horriblesubs_list
+      - not has_field('series_name'):
+          list_add:
+            - entry_list: noseries_list
+
+  EraiRaws:
+    disable:
+      - seen
+      - seen_info_hash
+    list_clear:
+      what:
+        - entry_list: erai-raws_list
+    metainfo_series: yes
+    parsing:
+      movie: guessit
+      series: guessit
+    rss:
+      url: https://ru.erai-raws.info/rss-all/
+      ascii: yes
+      all_entries: no
+    manipulate:
+        - description:
+            remove: yes
+        - title:
+            replace:
+              regexp: '^(\[720p\])(.*)'
+              format: '[EraiRaws]\2 \1'
+        - title:
+            replace:
+              regexp: '–'
+              format: ' '
+        - title:
+            replace:
+              regexp: '2nd Season'
+              format: 'Series 2'
+        - title:
+            replace:
+              regexp: '3rd Season'
+              format: 'Series 3'
+        - title:
+            replace:
+              regexp: '4th Season'
+              format: 'Series 4'
+        - title:
+            replace:
+              regexp: '5th Season'
+              format: 'Series 5'
+        - title:
+            replace:
+              regexp: '6th Season'
+              format: 'Series 6'
+        - title:
+            replace:
+              regexp: '7th Season'
+              format: 'Series 7'
+        - title:
+            replace:
+              regexp: '8th Season'
+              format: 'Series 8'
+        - title:
+            replace:
+              regexp: '9th Season'
+              format: 'Series 9'
+        - title:
+            replace:
+              regexp: '10th Season'
+              format: 'Series 10'
+        - title:
+            replace:
+              regexp: '11th Season'
+              format: 'Series 11'
+    set:
+      Mylabel: 100
+    quality: 720p
+    accept_all: yes
+    if:
+      - has_field('series_name'):
+          list_add:
+            - entry_list: erai-raws_list
+      - not has_field('series_name'):
+          list_add:
+            - entry_list: noseries_list
+
+  Fish:
+    disable:
+      - seen
+      - seen_info_hash
+    list_clear:
+      what:
+        - entry_list: releasegroups_list
+    metainfo_series: yes
+    parsing:
+      movie: guessit
+      series: guessit
+    manipulate:
+        - title:
+            replace:
+              regexp: '2nd Season'
+              format: 'Series 2'
+        - title:
+            replace:
+              regexp: '3rd Season'
+              format: 'Series 3'
+        - title:
+            replace:
+              regexp: '4th Season'
+              format: 'Series 4'
+        - title:
+            replace:
+              regexp: '5th Season'
+              format: 'Series 5'
+        - title:
+            replace:
+              regexp: '6th Season'
+              format: 'Series 6'
+        - title:
+            replace:
+              regexp: '7th Season'
+              format: 'Series 7'
+        - title:
+            replace:
+              regexp: '8th Season'
+              format: 'Series 8'
+        - title:
+            replace:
+              regexp: '9th Season'
+              format: 'Series 9'
+        - title:
+            replace:
+              regexp: '10th Season'
+              format: 'Series 10'
+        - title:
+            replace:
+              regexp: '11th Season'
+              format: 'Series 11'
+    inputs:
+      - rss:
+          url: https://nyaa.si/?page=rss&c=1_2&f=0
+          ascii: yes
+          all_entries: no
+      - rss:
+          url: https://feed.animetosho.org/rss2?only_tor=1
+          ascii: yes
+          all_entries: no
+      - rss:
+          url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
+          ascii: yes
+          all_entries: no
+      - rss:
+          url: http://tracker.minglong.org/rss.xml
+          ascii: yes
+          all_entries: no
+      - rss:
+          url: https://www.acgnx.se/rss-sort-2.xml
+          ascii: yes
+          all_entries: no
+    # set:
+    #   Mylabel: 12
+    regexp:
+      accept:
+        - '\[DeadFish\]'
+        - '\[BakedFish\]'
+        # - '\[Anime Time\]'
+        # - '\[YakuboEncodes\]'
+      from: title
+    #accept_all: yes
+    #quality: 720p
+    if:
+      - has_field('series_name') and release_group == "DeadFish":
+          quality: 720p
+          set:
+            MyLabel: 10
+          list_add:
+            - entry_list: releasegroups_list
+      - has_field('series_name') and release_group == "BakedFish":
+          quality: 720p
+          set:
+            MyLabel: 10
+          list_add:
+            - entry_list: releasegroups_list
+      # - has_field('series_name') and release_group == "Anime Time":
+      #     set:
+      #       MyLabel: 1000
+      #     list_add:
+      #       - entry_list: releasegroups_list
+      # - has_field('series_name') and release_group == "YakuboEncodes":
+      #     set:
+      #       MyLabel: 900
+      #     list_add:
+      #       - entry_list: releasegroups_list
+      - not has_field('series_name'):
+          list_add:
+            - entry_list: noseries_list
+
+  AnimeSeries:
+    all_series:
+      propers: yes
+      season_packs: yes
+    upgrade: 
+      tracking: yes
+      propers: yes
+      timeframe: 4 weeks
+    parsing:
+      movie: guessit
+      series: guessit
+    inputs:
+      - entry_list: erai-raws_list
+      - entry_list: horriblesubs_list
+      - entry_list: releasegroups_list
+    sort_by:
+      field: Mylabel
+      reverse: yes
+    write_magnet:
+      timeout: 30 seconds
+      num_try: 2
+    download: './torrents/{{ now|to_date }}/'
+  
+  NoSeries:
+    inputs:
+      - entry_list: noseries_list
+    accept_all: yes
+    write_magnet:
+      timeout: 30 seconds
+      num_try: 2
+    download: './torrents/{{ now|to_date }}/'
+  
+  #   manipulate:
+  #     - release_group:
+  #         phase: filter
+  #         replace:
+  #           regexp: 'None'
+  #           format: 'Erai-Raws'
+    # manipulate:
+    #     - title:
+    #         # [Erai-raws] Shingeki no Kyojin Season 3 - 12 [1080p][AVC-YUV444P10][Multiple Subtitle].mkv
+    #         # [Erai-raws] Shingeki no Kyojin Season 3 - 12 END [1080p][AVC-YUV444P10][Multiple Subtitle].mkv
+    #         extract: '(?:\[.+?\]) (.+?) (?:Season) (\d+) - (\d+)(?:.*) \[((?:1080|720|480)p)\]\[AVC-YUV444P(10)\]'
+    #     - title:
+    #         replace:
+    #           regexp: '(.*) (\d+) (\d*\w*) (\d+) (\d+)'
+    #           format: '\1 - S0\2E\3 - \4 \5bit'
+    #     - title:
+    #         # [Erai-raws] Pastel Memories - 02 [1080p AVC-YUV444P10].mkv
+    #         extract: '\[(?:.+)?\] (.+?) - (\d+)(?:.*) \[((?:1080|720|480)p)\ (?:AVC-YUV444P)(10)\]'
+    #     - title:
+    #         replace:
+    #           regexp: '(.*) (\d+) (\d*\w*) (.*)'
+    #           format: '\1 - S01E\2 - \3 \4bit'2nd Season
+  #     all_entries: no
+  # AnimeSeries:
+  #   all_series:
+  #     propers: yes
+  #     upgrade: yes
+  #     season_packs: yes
+  #   parsing:
+  #     movie: guessit
+  #     series: guessit
+  #   inputs:
+  #     - rss:
+  #         url: http://horriblesubs.info/rss.php?res=720
+  #         ascii: yes
+  #         all_entries: no
+  #     - rss:
+  #         url: https://ru.erai-raws.info/rss-720/
+  #         ascii: yes
+  #         all_entries: no
+  #   manipulate:
+  #     - release_group:
+  #         phase: filter
+  #         replace:
+  #           regexp: 'None'
+  #           format: 'Erai-Raws'
+  # HorribleSubs:
+  #   metainfo_series: yes
+  #   parsing:
+  #     movie: guessit
+  #     series: guessit
+  #   rss:
+  #     url: http://horriblesubs.info/rss.php?res=720
+  #     ascii: yes
+  #     all_entries: no
+  # EraiRaws:
+  #   metainfo_series: yes
+  #   parsing:
+  #     movie: guessit
+  #     series: guessit
+  #   rss:
+  #     url: https://ru.erai-raws.info/rss-720/
+  #     ascii: yes
+  #     all_entries: no
+  # nyaa:
+  #   rss:
+  #     url: https://nyaa.si/?page=rss&c=1_2&f=0
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
+  # animetosho:
+  #   rss:
+  #     url: https://feed.animetosho.org/rss2?only_tor=1
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
+  # tokyotosho:
+  #   rss:
+  #     url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
+  # minglong:
+  #   rss:
+  #     url: http://tracker.minglong.org/rss.xml
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
+  # acgnx:
+  #   rss:
+  #     url: https://www.acgnx.se/rss-sort-2.xml
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
