@@ -32,7 +32,7 @@ tasks:
       - filename:
           from: title
 
-  # This seems to work for directories
+  # This seems to work for directories (But not files)
   move-dirs:
     priority: 3
     seen: no
@@ -52,13 +52,14 @@ tasks:
       to: '/home/user/finished'
       allow_dir: yes
 
+  # This seems to work for files (But not directories)
   move-files:
     priority: 4
     seen: no
     filesystem:
       path: '/home/user/Downloads'
       recursive: no
-      regexp: '.*.(avi|mkv|mp4|m4v)$'
+      regexp: '.*.(mkv|avi|srt|wmv|ass|m2v|ss2|mp4|m4a|ac3|ogm|idx|sub|mka)$'
       retrieve: files
     crossmatch:
       from:
