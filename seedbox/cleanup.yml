@@ -1,9 +1,53 @@
 tasks:
-  Cleanup_Error torrents:
+  Cleanup_torrents_in_Error:
+    priority: 1
     from_deluge: yes
     disable: [seen, seen_info_hash]
     # Remove all torrents that are in an Error state
     if:
       - deluge_state == "Error": accept
     deluge:
+      action: purge
+
+  Cleanup_old_downloaders:
+    priority: 2
+    from_deluge: yes
+    disable: [seen, seen_info_hash]
+    if:
+    - deluge_state == "Downloading" and ((now - timedelta(days=14)).timestamp() > deluge_time_added) : accept
+    #- (now - timedelta(days=1)).timestamp(): accept - Runs, and accepts everything..
+    #- datetime.datetime(now).timestamp(): accept - runs but everything is undecided
+    #- "{ deluge_time_added|formatdate('%Y-%m-%d') }": accept
+    #- "{{ deluge_time_added|formatdate('%Y-%m-%d') }}": accept
+    #- "deluge_time_added|formatdate('%Y-%m-%d') > now - timedelta(days=1)": accept - Fails due to datetime vs float
+    # - "deluge_time_added|formatdate('%Y-%m-%d')": accept - Runs, and accepts everything..
+    #- ((now - timedelta(days=1))|int) > ((deluge_time_added|formatdate('%Y-%m-%d')|int)): accept - Doesn't work (but at least no errors)
+    #- (now - timedelta(days=1)) > ({{deluge_time_added|formatdate('%Y-%m-%d')}}): accept
+    #- (now - timedelta(days=1)) > (deluge_time_added|formatdate('%Y-%m-%d')): accept - Fails due to datetime vs float
+    #- now - timedelta(days=1) > {{ deluge_time_added|formatdate('%Y-%m-%d')  }} : accept
+    #- '{{ deluge_time_added|formatdate('%Y-%m-%d')  }} > now - timedelta(days=1) : accept'
+    #- {{ deluge_time_added|formatdate('%Y-%m-%d')  }} > now - timedelta(days=1) : accept
+    #- {{ deluge_time_added|formatdate('%Y-%m-%d') > now - timedelta(days=1) }}: accept
+    #-  '{{ deluge_time_added|formatdate(%Y-%m-%d)}} > now - timedelta(days=1)': accept
+    #- "{{ deluge_time_added|formatdate('%Y-%m-%d') }} > now - timedelta(days=14)": accept
+    #- '{{ deluge_time_added|formatdate('%Y-%m-%d') }} > now - timedelta(days=14)': accept
+    deluge:
+      action: purge
+
+  Cleanup_old_seeders:
+    priority: 3
+    from_deluge: yes
+    disable: [seen, seen_info_hash]
+    if:
+    - deluge_state == "Seeding" and ((now - timedelta(days=30)).timestamp() > deluge_time_added) : accept
+    deluge:
       action: remove
+
+  Cleanup_empty_downloaders:
+    priority: 4
+    from_deluge: yes
+    disable: [seen, seen_info_hash]
+    if:
+    - deluge_all_time_download == 0 and ((now - timedelta(days=3)).timestamp() > deluge_time_added) : accept
+    deluge:
+      action: purge    
