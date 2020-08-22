@@ -1,3 +1,4 @@
+# Flexget doesn't really seem to like Anidex..
 templates:
   anime_rss:
     regexp:
@@ -22,6 +23,7 @@ tasks:
     cfscraper: yes
     rss: 
       url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
+      # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
       ascii: yes
       all_entries: no
     template: anime_rss
