@@ -16,15 +16,19 @@ templates:
       reject:
         - '\[FA\]' # German Subs
         - '\[RoFL\]'  # German Subs
+        - '\[PM\]' # German Subs
         - '\[FrozenFruitSubs\]'  # Russian Subs
         - '\[HorribleSubs\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
         - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
         - '\[DVD\]' # Usually means ISO Release
         - '(\[English Dub\])' # I don't want English Dubs
         - 'FuniDub' # I don't want English Dubs
+        - 'Dub' # I don't want English Dubs (which in theory all dubs with these feeds are english)
         - 'DVD5' # Usually means ISO Release
         - 'DVD-Rip' # Usually means ISO Release
         - 'Hentai' # ugh, no
+        - '[Pp]orn' # God... why are you posting that to an ANIME feed..
         - '\[BDMV\]' # Usually means ISO Release
         - 'DVDISO' # Usually means ISO Release
         - 'COSPLAY' # I just want video (tho sometimes this stuff is quite good)
@@ -36,21 +40,21 @@ templates:
         - '\.zip' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - '\.iso' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
-        - '\.exe' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.exe' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives and doesn't exactly exclude torrents that actually contain this.
         - 'Drama CD' # I just want video
         - 'Eng-Dub' # I don't want English Dubs
         - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
-            - '(HEVC|x265|\[Anime Time\])'
+            - '(HEVC|x265)'  # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
         - '1920x1080': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-            - '(HEVC|x265|\[Anime Time\])'
+            - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
         - 'UHD': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-            - '(HEVC|x265|\[Anime Time\])'
+            - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
         - '2160p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-            - '(HEVC|x265|\[Anime Time\])'
+            - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
       from: title
     accept_all: yes
     deluge:
