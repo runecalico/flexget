@@ -12,6 +12,7 @@ templates:
       ru.erai-raws.info: 5 seconds
 
   anime_regexp:
+    accept_all: yes
     regexp:
       reject:
         - '\[FA\]' # German Subs
@@ -39,8 +40,6 @@ templates:
             - 'KOR' # Except sometimes I guess it's Japaneese and KOREAN (vs JPN & ENG)
         - '\.zip' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
-        - '\.iso' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
-        - '\.exe' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives and doesn't exactly exclude torrents that actually contain this.
         - 'Drama CD' # I just want video
         - 'Eng-Dub' # I don't want English Dubs
         - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
@@ -56,7 +55,12 @@ templates:
             not:
             - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
       from: title
-    accept_all: yes
+    content_filter:
+      reject:
+        - '*.ISO'
+        - '*.iso'
+        - '*.exe'
+        - '*.EXE'
     deluge:
       path: /home/user/Downloads
       #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
@@ -85,49 +89,63 @@ templates:
       ratio: 1.5
       remove_at_ratio: yes
       magnetization_timeout: 30
+
 tasks:
-  HorribleSubs:
+  animedl-HorribleSubs:
     rss:
       url: http://horriblesubs.info/rss.php?res=720
       ascii: yes
       all_entries: no
     template: animehorriblesubs
-  erairaws:
+  animedl-erairaws:
     rss:
       url: https://ru.erai-raws.info/rss-all/
       ascii: yes
       all_entries: no
     template: animeerairaws
-  nyaa:
+  animedl-nyaa:
     rss:
       url: https://nyaa.si/?page=rss&c=1_2&f=0
       ascii: yes
       all_entries: no
     template: anime_regexp
-  animetosho:
+  animedl-animetosho:
     rss:
       url: https://feed.animetosho.org/rss2?only_tor=1
       ascii: yes
       all_entries: no
     template: anime_regexp
-  tokyotosho:
+  animedl-tokyotosho:
     rss:
       url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
       ascii: yes
       all_entries: no
     template: anime_regexp
-  minglong:
+  animedl-minglong:
     rss:
       url: http://tracker.minglong.org/rss.xml
       ascii: yes
       all_entries: no
     template: anime_regexp
-  acgnx:
+  animedl-acgnx:
     rss:
       url: https://www.acgnx.se/rss-sort-2.xml
       ascii: yes
       all_entries: no
     template: anime_regexp
+  # This is done primarily as a task to get data from deluge because content_size doesn't work on magnets well during initial filtering
+  pause_large_torrents:
+    sleep:
+      seconds: 60 # This should give enough time for most of the torrents/magnets to start and get sizes etc.
+    from_deluge: yes
+    disable: [seen, seen_info_hash]
+    # Pause all torrents larger then 30GB that do not have the label "largeanimeok", Note Deluge labels are always lowercase in flexget
+    # And I don't want to deal with some of the stupidly large torrents people post that I either end up downloading (and then deleting)
+    # or chew up my Seedbox bandwith
+    if:
+      - deluge_label != "largeanimeok" and content_size >= 30720 : accept
+    deluge:
+      action: pause
 
 schedules:
   - tasks: '*'
