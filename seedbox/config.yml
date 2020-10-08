@@ -11,6 +11,9 @@ templates:
       feed.animetosho.org: 5 seconds
       ru.erai-raws.info: 5 seconds
 
+        # - '\[HorribleSubs\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+
+
   anime_regexp:
     accept_all: yes
     regexp:
@@ -19,9 +22,8 @@ templates:
         - '\[RoFL\]'  # German Subs
         - '\[PM\]' # German Subs
         - '\[FrozenFruitSubs\]'  # Russian Subs
-        - '\[HorribleSubs\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
-        - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
         - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
+        - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
         - '\[DVD\]' # Usually means ISO Release
         - '(\[English Dub\])' # I don't want English Dubs
         - 'FuniDub' # I don't want English Dubs
@@ -42,6 +44,7 @@ templates:
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - 'Drama CD' # I just want video
         - 'Eng-Dub' # I don't want English Dubs
+        - '480p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
         - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
             - '(HEVC|x265)'  # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
@@ -91,15 +94,16 @@ templates:
       magnetization_timeout: 30
 
 tasks:
-  animedl-HorribleSubs:
-    rss:
-      url: http://horriblesubs.info/rss.php?res=720
-      ascii: yes
-      all_entries: no
-    template: animehorriblesubs
+  # RIP: Fall 2020
+  # animedl-HorribleSubs:
+  #   rss:
+  #     url: http://horriblesubs.info/rss.php?res=720
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animehorriblesubs
   animedl-erairaws:
     rss:
-      url: https://ru.erai-raws.info/rss-all/
+      url: https://www.erai-rss.info/rss-all/
       ascii: yes
       all_entries: no
     template: animeerairaws
