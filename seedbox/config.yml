@@ -11,9 +11,6 @@ templates:
       feed.animetosho.org: 5 seconds
       ru.erai-raws.info: 5 seconds
 
-        # - '\[HorribleSubs\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
-
-
   anime_regexp:
     accept_all: yes
     regexp:
@@ -44,7 +41,7 @@ templates:
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - 'Drama CD' # I just want video
         - 'Eng-Dub' # I don't want English Dubs
-        - '480p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        - '480p'
         - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
             - '(HEVC|x265)'  # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
