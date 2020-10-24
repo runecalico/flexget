@@ -29,6 +29,7 @@ templates:
         - 'DVD-Rip' # Usually means ISO Release
         - 'Hentai' # ugh, no
         - '[Pp]orn' # God... why are you posting that to an ANIME feed..
+        - 'JulyJailbait' # God... why are you posting that to an ANIME feed.. but at least you give me something to filter on..
         - '\[BDMV\]' # Usually means ISO Release
         - 'DVDISO' # Usually means ISO Release
         - 'COSPLAY' # I just want video (tho sometimes this stuff is quite good)
@@ -41,19 +42,24 @@ templates:
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - 'Drama CD' # I just want video
         - 'Eng-Dub' # I don't want English Dubs
+        - '360p'
+            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+            - '(DVD)'
         - '480p'
+            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+            - '(DVD)'
         - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
-            - '(HEVC|x265)'  # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
+            - '(HEVC|x265|H265|H.265)'  # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
         - '1920x1080': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-            - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
+            - '(HEVC|x265|H265|H.265)' # But if they say it's HEVX/x265, it might be a sane file size
         - 'UHD': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-            - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
+            - '(HEVC|x265|H265|H.265)' # But if they say it's HEVX/x265, it might be a sane file size
         - '2160p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-            - '(HEVC|x265)' # But if they say it's HEVX/x265, it might be a sane file size
+            - '(HEVC|x265|H265|H.265)' # But if they say it's HEVX/x265, it might be a sane file size
       from: title
     content_filter:
       reject:
