@@ -10,12 +10,13 @@ templates:
       www.anirena.com: 5 seconds
       feed.animetosho.org: 5 seconds
       ru.erai-raws.info: 5 seconds
+      www.shanaproject.com: 5 seconds
 
   anime_regexp:
     accept_all: yes
     regexp:
       reject:
-        - '\[FA\]' # German Subs
+        - '\[FA\]'
         - '\[RoFL\]'  # German Subs
         - '\[PM\]' # German Subs
         - '\[FrozenFruitSubs\]'  # Russian Subs
@@ -42,14 +43,14 @@ templates:
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - 'Drama CD' # I just want video
         - 'Eng-Dub' # I don't want English Dubs
-        - '360p'
-            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+        - '360p':
+            not:
             - '(DVD)'
-        - '480p'
-            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+        - '480p':
+            not:
             - '(DVD)'
         - '1080p': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
-            not: #Stupid yaml, from how the docs look this is the wrong identation, but it works this way ..
+            not:
             - '(HEVC|x265|H265|H.265)'  # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
         - '1920x1080': # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
@@ -106,10 +107,16 @@ tasks:
   #   template: animehorriblesubs
   animedl-erairaws:
     rss:
-      url: https://www.erai-rss.info/rss-all/
+      url: https://www.shanaproject.com/feeds/subber/Erai-raws/
       ascii: yes
       all_entries: no
     template: animeerairaws
+  animedl-shanaproject:
+    rss:
+      url: https://www.shanaproject.com/feeds/site/
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
   animedl-nyaa:
     rss:
       url: https://nyaa.si/?page=rss&c=1_2&f=0
