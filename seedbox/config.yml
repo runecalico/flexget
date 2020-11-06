@@ -16,7 +16,8 @@ templates:
     accept_all: yes
     regexp:
       reject:
-        - '\[FA\]'
+        - '\[FA\]' # German Subs
+        - '\[FS\]' # Spanish Subs (Hard Sub even)
         - '\[RoFL\]'  # German Subs
         - '\[PM\]' # German Subs
         - '\[FrozenFruitSubs\]'  # Russian Subs
