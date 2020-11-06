@@ -39,7 +39,7 @@ tasks:
     from_deluge: yes
     disable: [seen, seen_info_hash]
     if:
-    - deluge_state == "Seeding" and ((now - timedelta(days=30)).timestamp() > deluge_time_added) : accept
+    - deluge_state == "Seeding" and ((now - timedelta(days=14)).timestamp() > deluge_time_added) : accept
     deluge:
       action: remove
 
