@@ -22,6 +22,7 @@ templates:
         - '\[PM\]' # German Subs
         - '\[FrozenFruitSubs\]'  # Russian Subs
         - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
+        - '\[SSA\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
         - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
         - '\[SubsPlease\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
         - '\[DVD\]' # Usually means ISO Release
