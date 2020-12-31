@@ -20,10 +20,14 @@ templates:
         - '\[FS\]' # Spanish Subs (Hard Sub even)
         - '\[RoFL\]'  # German Subs
         - '\[PM\]' # German Subs
+        - '\[AAF\]' # Spanish Subs
+        - '\[PuyaSubs\!\]' # Spanish Subs
         - '\[FrozenFruitSubs\]'  # Russian Subs
         - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
         - '\[SSA\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
         - '\[erai-raws\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+            not:
+            - '(HEVC|x265|H265|H.265)' # But if they say it's HEVX/x265, it might be a sane file size
         - '\[SubsPlease\]' # Downloaded directly from their RSS, this is so I don't get other resolutions from them
         - '\[DVD\]' # Usually means ISO Release
         - '(\[English Dub\])' # I don't want English Dubs
