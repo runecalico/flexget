@@ -11,7 +11,6 @@ templates:
       feed.animetosho.org: 5 seconds
       ru.erai-raws.info: 5 seconds
       www.shanaproject.com: 5 seconds
-      anirena.com: 5 seconds
 
   anime_regexp:
     accept_all: yes
@@ -28,7 +27,9 @@ templates:
         - '\[Ohys-Raws\]' # No Subtitle Raws (actual Raws)
         - '\[MSK-Raws\]' # No Subtitle Raws (actual Raws)
         - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
-        - '\[SSA\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
+        - '\[SSA\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+            not:
+              - "(1080p)" # But if they say it's HEVX/x265, it might be a sane file size
         - '\[erai-raws\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
@@ -60,6 +61,7 @@ templates:
         - "1080p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
+              - '\[SSA\]'
         - "1920x1080": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
@@ -138,7 +140,7 @@ templates:
       magnetization_timeout: 30
 
 tasks:
-  # RIP: Fall 2020
+  # This is sometimes unreliable ..
   animedl-AnirenaSSA:
     rss:
       url: https://www.anirena.com/rss.php?s=[SSA]
