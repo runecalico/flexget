@@ -121,7 +121,7 @@ templates:
       remove_at_ratio: yes
       magnetization_timeout: 30
 
-  anirenaSSA:
+  animessa:
     quality: 1080p
     accept_all: yes
     regexp:
@@ -141,18 +141,12 @@ templates:
 
 tasks:
   # This is sometimes unreliable ..
-  animedl-AnirenaSSA:
+  animedl-anirenaSSA:
     rss:
       url: https://www.anirena.com/rss.php?s=[SSA]
       ascii: yes
       all_entries: no
-    template: anirenaSSA
-  # animedl-subsplease:
-  #   rss:
-  #     url: https://subsplease.org/rss/?r=720
-  #     ascii: yes
-  #     all_entries: no
-  #   template: animesubplease
+    template: animessa
   animedl-erairaws:
     rss:
       url: https://www.shanaproject.com/feeds/subber/Erai-raws/

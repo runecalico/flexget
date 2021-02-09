@@ -59,7 +59,7 @@ tasks:
     filesystem:
       path: '/home/user/Downloads'
       recursive: no
-      regexp: '.*.(mkv|avi|srt|wmv|ass|m2v|ss2|mp4|m4a|ac3|ogm|idx|sub|mka)$'
+      regexp: '.*.(mkv|avi|srt|wmv|ass|m2v|ss2|mp4|m4a|ac3|ogm|idx|sub|mka|mov|m4v)$'
       retrieve: files
     crossmatch:
       from:

@@ -1,29 +1,95 @@
-# Flexget doesn't really seem to like Anidex..
 templates:
-  anime_rss:
+  global:
+    # Limit the frequency of requests to domains so they don't complain about using a bot
+    domain_delay:
+      anidex.info: 5 seconds
+
+  anime_regexp:
+    accept_all: yes
     regexp:
-      accept_excluding:
-        - (1080p|480p|360p|480|Dual Audio|dub|1920x1080|360p|Dual-Audio|Multi-Audio|\[1080\]|DVD5|DVD-Rip|Hentai|BDMV|DVDISO|COSPLAY|Cosplay|.zip|.rar|arabic)
+      reject:
+        - '\[FA\]' # German Subs
+        - '\[FS\]' # Spanish Subs (Hard Sub even)
+        - '\[RoFL\]' # German Subs
+        - '\[PM\]' # German Subs
+        - '\[AAF\]' # Spanish Subs
+        - '\[IDIF\]' # Spanish Subs
+        - '\[PuyaSubs\!\]' # Spanish Subs
+        - '\[FrozenFruitSubs\]' # Russian Subs
+        - '\[Ohys-Raws\]' # No Subtitle Raws (actual Raws)
+        - '\[MSK-Raws\]' # No Subtitle Raws (actual Raws)
+        - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
+        - '\[SSA\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+            not:
+              - "(1080p)" # But if they say it's HEVX/x265, it might be a sane file size
+        - '\[erai-raws\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        - '\[SubsPlease\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        - '\[DVD\]' # Usually means ISO Release
+        - '(\[English Dub\])' # I don't want English Dubs
+        - "FuniDub" # I don't want English Dubs
+        - "Dub" # I don't want English Dubs (which in theory all dubs with these feeds are english)
+        - "DVD5" # Usually means ISO Release
+        - "DVD-Rip" # Usually means ISO Release
+        - "DVD_ISO" # Usually means ISO Release
+        - "Hentai" # ugh, no
+        - "[Pp]orn" # God... why are you posting that to an ANIME feed..
+        - "JulyJailbait" # God... why are you posting that to an ANIME feed.. but at least you give me something to filter on..
+        - '\[BDMV\]' # Usually means ISO Release
+        - "DVDISO" # Usually means ISO Release
+        - "COSPLAY" # I just want video (tho sometimes this stuff is quite good)
+        - "arabic" # English please
+        - "English Dubbed" # I don't want English Dubs
+        - "(Dual[- ]Audio)": # I don't want English Dubs
+            not:
+              - "KOR" # Except sometimes I guess it's Japaneese and KOREAN (vs JPN & ENG)
+        - '\.zip' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
+        - "Drama CD" # I just want video
+        - "Eng-Dub" # I don't want English Dubs
+        - "1080p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
+              - '\[SSA\]'
+        - "1920x1080": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        - "UHD": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        - "2160p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+      from: title
+    content_filter:
+      reject:
+        - "*.ISO"
+        - "*-ISO"
+        - "*.iso"
+        - "*-iso"
+        - "*.img"
+        - "*-img"
+        - "*.exe"
+        - "*.EXE"
     deluge:
       path: /home/user/Downloads
-      move_completed_path:  /home/user/Downloads/finished
+      #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
       label: anime
       ratio: 1.5
       remove_at_ratio: yes
       magnetization_timeout: 30
- 
-
 
 tasks:
   anidex:
-    domain_delay:
-      anidex.info: 5 seconds     
     headers:
-      User-Agent: 'Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0'
+      User-Agent: "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"
     cfscraper: yes
-    rss: 
+    rss:
       url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
       # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
       ascii: yes
       all_entries: no
-    template: anime_rss
+    template: anime_regexp
