@@ -22,8 +22,11 @@ templates:
         - '\[PM\]' # German Subs
         - '\[AAF\]' # Spanish Subs
         - '\[IDIF\]' # Spanish Subs
+        - '\[INDO SUB\]' # Non-English Subs
         - '\[PuyaSubs\!\]' # Spanish Subs
         - '\[FrozenFruitSubs\]' # Russian Subs
+        - '\[HYSUB\]' # Not Subtitled in English (Hardsub of ... Not English) Subs
+        - '\[THSUB\]' # Not Subtitled in English (Hardsub of ... Not English) Subs
         - '\[Ohys-Raws\]' # No Subtitle Raws (actual Raws)
         - '\[MSK-Raws\]' # No Subtitle Raws (actual Raws)
         - '\[Anime Time\]' # Hard Subs suck, and it's easy to forget to check the hard sub box when adding to AniDB which makes them waste time (and get annoyed)
@@ -71,7 +74,9 @@ templates:
         - "2160p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
-      from: title
+      from: 
+      - category
+      - title
     content_filter:
       reject:
         - "*.ISO"
@@ -189,12 +194,13 @@ tasks:
       ascii: yes
       all_entries: no
     template: anime_regexp
-  animedl-anirena:
-    rss:
-      url: https://www.anirena.com/rss.php?t=2
-      ascii: yes
-      all_entries: no
-    template: anime_regexp
+  # Frequenty has the Hentai category mixed in, and I can't seem to regex it out via category in feed.
+  # animedl-anirena:
+  #   rss:
+  #     url: https://www.anirena.com/rss.php?t=2
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
   # This is done primarily as a task to get data from deluge because content_size doesn't work on magnets well during initial filtering
   pause_large_torrents:
     sleep:
