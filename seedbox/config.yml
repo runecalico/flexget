@@ -25,6 +25,9 @@ templates:
         - '\[INDO SUB\]' # Non-English Subs
         - '\[PuyaSubs\!\]' # Spanish Subs
         - '\[FrozenFruitSubs\]' # Russian Subs
+        - '\[SakuraCircle\]' # Mainly Hentai
+        - '\[hikiko123\]' # Hentai
+        - '\[JustBLThings-aarinfantasy\]' # Not into BL things
         - '\[HYSUB\]' # Not Subtitled in English (Hardsub of ... Not English) Subs
         - '\[THSUB\]' # Not Subtitled in English (Hardsub of ... Not English) Subs
         - '\[Ohys-Raws\]' # No Subtitle Raws (actual Raws)
