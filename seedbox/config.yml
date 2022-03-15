@@ -149,18 +149,26 @@ templates:
 
 tasks:
   # This is sometimes unreliable ..
-  animedl-anirenaSSA:
-    rss:
-      url: https://www.anirena.com/rss.php?s=[SSA]
-      ascii: yes
-      all_entries: no
-    template: animessa
+  # RIP: 2022/01/10
+  # animedl-anirenaSSA:
+  #   rss:
+  #     url: https://www.anirena.com/rss.php?s=[SSA]
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animessa
   animedl-erairaws:
     rss:
-      url: https://www.shanaproject.com/feeds/subber/Erai-raws/
+      url: https://www.erai-raws.info/feed/?res=720p&type=magnet
       ascii: yes
       all_entries: no
     template: animeerairaws
+  # RIP: 2022/01/10
+  # animedl-erairaws:
+  #   rss:
+  #     url: https://www.shanaproject.com/feeds/subber/Erai-raws/
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animeerairaws
   animedl-shanaproject:
     rss:
       url: https://www.shanaproject.com/feeds/site/
@@ -181,16 +189,17 @@ tasks:
     template: anime_regexp
   animedl-tokyotosho:
     rss:
-      url: https://www.tokyotosho.info/rss.php?filter=1%2C11%2C5
+      url: https://www.tokyotosho.info/rss.php?filter=1
       ascii: yes
       all_entries: no
     template: anime_regexp
-  animedl-minglong:
-    rss:
-      url: http://tracker.minglong.org/rss.xml
-      ascii: yes
-      all_entries: no
-    template: anime_regexp
+  # RIP: 2022/01/10
+  # animedl-minglong: 
+  #   rss:
+  #     url: http://tracker.minglong.org/rss.xml
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
   animedl-acgnx:
     rss:
       url: https://www.acgnx.se/rss-sort-2.xml
