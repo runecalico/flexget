@@ -39,6 +39,9 @@ templates:
         - '\[erai-raws\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        - '-NanDesuKa': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+            not:
+              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
         - '\[SubsPlease\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
@@ -67,7 +70,7 @@ templates:
         - "1080p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
-              - '\[SSA\]'
+              - '\[SSA\]|\[Erai-raws\]|\[SubsPlease\]' # Seems some groups are using HEVC etc .. but not mentioning it
         - "1920x1080": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
@@ -90,6 +93,17 @@ templates:
         - "*-img"
         - "*.exe"
         - "*.EXE"
+    deluge:
+      path: /home/user/Downloads
+      #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+      label: anime
+      ratio: 1.5
+      remove_at_ratio: yes
+      magnetization_timeout: 30
+
+  animenandesuka:
+    quality: 720p
+    accept_all: yes
     deluge:
       path: /home/user/Downloads
       #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
@@ -156,12 +170,14 @@ tasks:
   #     ascii: yes
   #     all_entries: no
   #   template: animessa
-  animedl-erairaws:
-    rss:
-      url: https://www.erai-raws.info/feed/?res=720p&type=magnet
-      ascii: yes
-      all_entries: no
-    template: animeerairaws
+  # Needs Authentication now
+  # https://www.erai-raws.info/feed/?res=720p&type=torrent&0879fd62733b8db8535eb1be24e23f6d
+  # animedl-erairaws:
+  #   rss:
+  #     url: https://www.erai-raws.info/feed/?res=720p&type=magnet
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animeerairaws
   # RIP: 2022/01/10
   # animedl-erairaws:
   #   rss:
@@ -169,6 +185,12 @@ tasks:
   #     ascii: yes
   #     all_entries: no
   #   template: animeerairaws
+  animedl-nandesuka:
+    rss:
+      url: https://nyaa.si/?page=rss&c=1_2&f=0&u=NanDesuKa
+      ascii: yes
+      all_entries: no
+    template: animenandesuka
   animedl-shanaproject:
     rss:
       url: https://www.shanaproject.com/feeds/site/
