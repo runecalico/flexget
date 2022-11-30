@@ -85,7 +85,11 @@ templates:
 tasks:
   anidex:
     headers:
-      User-Agent: "Mozilla/5.0 (Windows NT 6.3; WOW64; rv:35.0) Gecko/20100101 Firefox/35.0"
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      accept-encoding: "gzip, deflate, br"
+      accept-language: "en-US,en;q=0.9"
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO; PHPSESSID=8ske28rbbi12bi7f1p9rjvi0an"
     cfscraper: yes
     rss:
       url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0

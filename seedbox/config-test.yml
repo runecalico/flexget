@@ -143,7 +143,7 @@ templates:
       label: anime
       ratio: 1.5
       remove_at_ratio: yes
-      magnetization_timeout: 30
+      #magnetization_timeout: 30
 
   animehorriblesubs:
     accept_all: yes
@@ -225,9 +225,24 @@ tasks:
       ascii: yes
       all_entries: no
     template: anime_regexp
+  # Unfortunately prone for Henti/Porn/Warez that can be difficult to filter out
+  animedl-anidex:
+    headers:
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      accept-encoding: "gzip, deflate, br"
+      accept-language: "en-US,en;q=0.9"
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO; PHPSESSID=8ske28rbbi12bi7f1p9rjvi0an" #This looks to be the key
+    cfscraper: yes
+    rss:
+      url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
+      # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
+      ascii: yes
+      all_entries: no
+    template: anime_regexp
   animedl-shanaproject:
     headers:
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key for anidex.info
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO; PHPSESSID=8ske28rbbi12bi7f1p9rjvi0an" #This looks to be the key for anidex.info
     rss:
       url: https://www.shanaproject.com/feeds/site/
       ascii: yes
@@ -235,8 +250,6 @@ tasks:
     cfscraper: yes  
     template: anime_regexp
   animedl-animetosho:
-    headers:
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key for anidex.info
     rss:
       url: https://feed.animetosho.org/rss2?only_tor=1
       ascii: yes
@@ -245,7 +258,7 @@ tasks:
     template: anime_regexp
   animedl-tokyotosho:
     headers:
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key for anidex.info
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO; PHPSESSID=8ske28rbbi12bi7f1p9rjvi0an" #This looks to be the key for anidex.info
     rss:
       url: https://www.tokyotosho.info/rss.php?filter=1
       ascii: yes
@@ -262,21 +275,6 @@ tasks:
   animedl-acgnx:
     rss:
       url: https://www.acgnx.se/rss-sort-2.xml
-      ascii: yes
-      all_entries: no
-    template: anime_regexp
-  # Unfortunately prone for Henti/Porn/Warez that can be difficult to filter out
-  animedl-anidex:
-    headers:
-      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
-      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-      accept-encoding: "gzip, deflate, br"
-      accept-language: "en-US,en;q=0.9"
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
-    cfscraper: yes
-    rss:
-      url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
-      # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
       ascii: yes
       all_entries: no
     template: anime_regexp
@@ -302,15 +300,6 @@ tasks:
       action: pause
 
 schedules:
-  - tasks: [ animedl-erairaws, animedl-nandesuka, animedl-nyaa, animedl-acgnx ]
+  - tasks: "*"
     interval:
       hours: 1
-      jitter: 120
-  - tasks: [ animedl-shanaproject, animedl-animetosho, animedl-tokyotosho, animedl-anidex ]
-    interval:
-      hours: 1
-      jitter: 120
-  - tasks: [ pause_large_torrents ]
-    interval:
-      minutes: 30
-      jitter: 120
