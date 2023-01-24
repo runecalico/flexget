@@ -223,9 +223,6 @@ tasks:
   #     all_entries: no
   #   template: animeerairaws
   animedl-ncraws:
-    disable:
-      - seen
-      - seen_info_hash
     rss:
       url: https://nyaa.si/?page=rss&q=NC-RAWS&c=1_2&f=0
       ascii: yes
