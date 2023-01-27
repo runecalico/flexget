@@ -4,6 +4,7 @@
 pip3 install --upgrade pip
 pip3 install --upgrade setuptools
 pip3 install --upgrade libtorrent
+pip3 install --upgrade guppy3
 pip3 install --upgrade wheel # to upgrade: pip3 install --upgrade deluge-client
 pip3 install --upgrade deluge-client # Needed to talk to Deluge - to upgrade: pip3 install --upgrade deluge-client
 pip3 install --upgrade lbry-libtorrent # Needed for convert_magnet - to upgrade: pip3 install --upgrade lbry-libtorrent
