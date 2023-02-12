@@ -108,11 +108,11 @@ templates:
       remove_at_ratio: yes
       magnetization_timeout: 30
 
-  bravesail-rename:
+  ncraws-rename:
     manipulate:
       - title:
           replace:
-            regexp: '^(\[.*\])((.*(?=[฀-﫿]).+?)?(\s{1,3}\/\s)|(\s+\(.*(?=\/)\/\s))'
+            regexp: '^(\[NC-Raws\])((.*(?=[฀-﫿]).+?)?(\s{1,3}\/\s)|(\s+\(.*(?=\/)\/\s))'
             format: '\1 '
       - title:
           replace:
@@ -120,6 +120,28 @@ templates:
             format: ''
     set:
       content_filename:  '{{title}}'
+
+  animenandesuka:
+    quality: 720p
+    accept_all: yes
+    # deluge:
+    #   path: /home/user/Downloads
+    #   #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+    #   label: anime
+    #   ratio: 1.5
+    #   remove_at_ratio: yes
+    #   magnetization_timeout: 30
+
+  # animeerairaws:
+  #   quality: 720p
+  #   accept_all: yes
+  #   deluge:
+  #     path: /home/user/Downloads
+  #     #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+  #     label: anime
+  #     ratio: 1.5
+  #     remove_at_ratio: yes
+  #     magnetization_timeout: 30
 
   animeerairaws:
     accept_all: yes
@@ -130,17 +152,84 @@ templates:
       max: 900
       strict: yes
     quality: 1080p
+    # deluge:
+    #   path: /home/user/Downloads
+    #   #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+    #   label: anime
+    #   ratio: 1.5
+    #   remove_at_ratio: yes
+    #   magnetization_timeout: 30
+
+  animehorriblesubs:
+    accept_all: yes
+    # deluge:
+    #   path: /home/user/Downloads
+    #   #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+    #   label: anime
+    #   ratio: 1.5
+    #   remove_at_ratio: yes
+    #   magnetization_timeout: 30
+
+  animesubplease:
+    accept_all: yes
+    # deluge:
+    #   path: /home/user/Downloads
+    #   #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+    #   label: anime
+    #   ratio: 1.5
+    #   remove_at_ratio: yes
+    #   magnetization_timeout: 30
+
+  animessa:
+    quality: 1080p
+    accept_all: yes
+    regexp:
+      reject:
+        - "Hardsubs" # HardSubs Suck
+      from: title
+    content_filter:
+      reject:
+        - "*.mp4" # HardSubs for SSA
+    # deluge:
+    #   path: /home/user/Downloads
+    #   #move_completed_path:  /home/user/Downloads/finished # Handled by movefinished.yaml now
+    #   label: anime
+    #   ratio: 1.5
+    #   remove_at_ratio: yes
+    #   magnetization_timeout: 30
 
 tasks:
-  # Formally NC-RAWS
-  animedl-bravesail: 
+  # This is sometimes unreliable ..
+  # RIP: 2022/01/10
+  # animedl-anirenaSSA:
+  #   rss:
+  #     url: https://www.anirena.com/rss.php?s=[SSA]
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animessa
+  # Needs Authentication now
+  # https://www.erai-raws.info/feed/?res=720p&type=torrent&0879fd62733b8db8535eb1be24e23f6d
+  # animedl-erairaws:
+  #   rss:
+  #     url: https://www.erai-raws.info/feed/?res=720p&type=magnet
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animeerairaws
+  # RIP: 2022/01/10
+  # animedl-erairaws:
+  #   rss:
+  #     url: https://www.shanaproject.com/feeds/subber/Erai-raws/
+  #     ascii: yes
+  #     all_entries: no
+  #   template: animeerairaws
+  animedl-ncraws:
     rss:
-      url: https://nyaa.si/?page=rss&c=1_2&f=0&u=BraveSail
+      url: https://nyaa.si/?page=rss&q=NC-RAWS&c=1_2&f=0
       ascii: yes
       all_entries: no
     template: 
       - anime_regexp
-      - bravesail-rename
+      - ncraws-rename
       - download-deluge
   animedl-erairaws:
     rss:
@@ -149,7 +238,15 @@ tasks:
       all_entries: no
     template: 
       - animeerairaws
-      - download-deluge          
+      - download-deluge     
+  # animedl-nandesuka:
+  #   rss:
+  #     url: https://nyaa.si/?page=rss&c=1_2&f=0&u=NanDesuKa
+  #     ascii: yes
+  #     all_entries: no
+  #   template: 
+  #     - animenandesuka
+  #     - download-deluge       
   animedl-nyaa:
     rss:
       url: https://nyaa.si/?page=rss&c=1_2&f=0
@@ -191,6 +288,13 @@ tasks:
     template: 
       - anime_regexp
       - download-deluge 
+  # RIP: 2022/01/10
+  # animedl-minglong: 
+  #   rss:
+  #     url: http://tracker.minglong.org/rss.xml
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
   animedl-acgnx:
     rss:
       url: https://www.acgnx.se/rss-sort-2.xml
@@ -216,6 +320,13 @@ tasks:
     template: 
       - anime_regexp
       - download-deluge 
+  # Frequenty has the Hentai category mixed in, and I can't seem to regex it out via category in feed.
+  # animedl-anirena:
+  #   rss:
+  #     url: https://www.anirena.com/rss.php?t=2
+  #     ascii: yes
+  #     all_entries: no
+  #   template: anime_regexp
   # This is done primarily as a task to get data from deluge because content_size doesn't work on magnets well during initial filtering
   pause_large_torrents:
     sleep:
@@ -226,8 +337,7 @@ tasks:
     # And I don't want to deal with some of the stupidly large torrents people post that I either end up downloading (and then deleting)
     # or chew up my Seedbox bandwith
     if:
-      - content_size >= 30720: accept
-      # - deluge_label != "largeanimeok" and content_size >= 30720: accept # 2023/01/31 - For some reason deluge_label isn't available
+      - deluge_label != "largeanimeok" and content_size >= 30720: accept
     deluge:
       action: pause
 
@@ -236,3 +346,15 @@ schedules:
     interval:
       hours: 1
       jitter: 120
+  # - tasks: [ animedl-erairaws, animedl-nandesuka, animedl-nyaa, animedl-acgnx ]
+  #   interval:
+  #     hours: 1
+  #     jitter: 120
+  # - tasks: [ animedl-shanaproject, animedl-animetosho, animedl-tokyotosho, animedl-anidex ]
+  #   interval:
+  #     hours: 1
+  #     jitter: 120
+  # - tasks: [ pause_large_torrents ]
+  #   interval:
+  #     minutes: 30
+  #     jitter: 120
