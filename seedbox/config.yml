@@ -16,7 +16,7 @@ templates:
   anime_regexp:
     accept_all: yes
     convert_magnet: # Because the content_filter filter only works on torrents
-      timeout: 180 seconds
+      timeout: 240 seconds
     regexp:
       reject:
         - '\[FA\]' # German Subs
@@ -67,10 +67,10 @@ templates:
               - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
         - "UHD": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+              - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
         - "2160p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+              - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
         - '-NanDesuKa': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
@@ -131,6 +131,13 @@ templates:
       strict: yes
     quality: 1080p
 
+  anime1080p:
+    accept_all: yes
+    #magnets: no # Because the content_size filter only works on torrents
+    convert_magnet: # Because the content_size filter only works on torrents
+      timeout: 240 seconds
+    quality: 1080p
+
 tasks:
   # Formally NC-RAWS
   animedl-bravesail: 
@@ -142,14 +149,14 @@ tasks:
       - anime_regexp
       - bravesail-rename
       - download-deluge
-  # Exception to the Rule on no H264/AVC
+  # Exception to the Rule on no H264/AVC, as they usually only release in AVC
   animedl-taleOfHerdingGods: 
     rss:
       url: https://nyaa.si/?page=rss&q=%5BFSP+DN%5D+tales+of+herding&c=0_0&f=0
       ascii: yes
       all_entries: no
     template: 
-      - anime_regexp
+      - anime1080p
       - download-deluge 
   animedl-erairaws:
     rss:
@@ -248,7 +255,9 @@ tasks:
     # or chew up my Seedbox bandwith
     if:
       # - content_size >= 30720: accept
-      - deluge_label != "largeanimeok" and content_size >= 30720: accept # 2023/01/31 - For some reason deluge_label isn't available
+      # 2023/01/31 - For some reason deluge_label isn't available
+      # 2025/04/05 - For some reason content_size is now in bytes not MB
+      - deluge_label != "largeanimeok" and content_size >= 32212254720: accept 
     deluge:
       action: pause
 

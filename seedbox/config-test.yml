@@ -15,8 +15,9 @@ templates:
 
   anime_regexp:
     accept_all: yes
-    convert_magnet: # Because the content_filter filter only works on torrents
-      timeout: 180 seconds
+    # Because the content_filter filter only works on torrents
+    convert_magnet: 
+      timeout: 240 seconds
     regexp:
       reject:
         - '\[FA\]' # German Subs
@@ -51,36 +52,45 @@ templates:
         - "COSPLAY" # I just want video (tho sometimes this stuff is quite good)
         - "arabic" # English please
         - "English Dubbed" # I don't want English Dubs
-        - "(Dual[- ]Audio)": # I don't want English Dubs
+        # I don't want English Dubs
+        - "(Dual[- ]Audio)":
             not:
               - "KOR" # Except sometimes I guess it's Japaneese and KOREAN (vs JPN & ENG)
         - '\.zip' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - '\.rar' # At some point work on moving this to just regex vs file contents, as title/description sometimes produces false positives
         - "Drama CD" # I just want video
         - "Eng-Dub" # I don't want English Dubs
-        - "1080p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        - "1080p": 
             not:
               - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size - but... it looks like this allows for stuff that should be rejected to pass..damn it.
               - '\[SSA\]' # Seems some groups are using HEVC etc .. but not mentioning it
-        - "1920x1080": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        - "1920x1080": 
+            not:
+              - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        - "UHD": 
+            not:
+              - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
+        - "2160p": 
+            not:
+              - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+        # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '-NanDesuKa': 
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
-        - "UHD": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
-            not:
-              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
-        - "2160p": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
-            not:
-              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
-        - '-NanDesuKa': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
-            not:
-              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
-        - '\[SSA\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[SSA\]': 
             not:
               - "(1080p)" # But if they say it's HEVX/x265, it might be a sane file size
-        - '\[erai-raws\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[erai-raws\]': 
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
-        - '\[SubsPlease\]': # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        # Downloaded directly from their RSS, this is so I don't get other resolutions from them
+        - '\[SubsPlease\]': 
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
       from: 
@@ -108,6 +118,13 @@ templates:
       remove_at_ratio: yes
       magnetization_timeout: 30
 
+  saveMetadata:
+    exec:
+      on_output:
+        for_accepted:
+          - >
+            echo '{{ entry | default({}) | tojson }}' > '/home/user/finished/{{ title | pathscrub }}_{{ entry.guid | default("no-guid") }}.json'
+
   bravesail-rename:
     manipulate:
       - title:
@@ -124,12 +141,22 @@ templates:
   animeerairaws:
     accept_all: yes
     #magnets: no # Because the content_size filter only works on torrents
-    convert_magnet: # Because the content_size filter only works on torrents
-      timeout: 180 seconds
+    # Because the content_size filter only works on torrents
+    convert_magnet: 
+      timeout: 240 seconds
     content_size:
       max: 900
       strict: yes
     quality: 1080p
+
+  anime1080p:
+    accept_all: yes
+    #magnets: no # Because the content_size filter only works on torrents
+    # Because the content_size filter only works on torrents
+    convert_magnet: 
+      timeout: 240 seconds
+    quality: 1080p
+
 
 tasks:
   # Formally NC-RAWS
@@ -142,6 +169,24 @@ tasks:
       - anime_regexp
       - bravesail-rename
       - download-deluge
+  # Exception to the Rule on no H264/AVC, as they usually only release in AVC
+  animedl-taleOfHerdingGods: 
+    rss:
+      url: https://nyaa.si/?page=rss&q=%5BFSP+DN%5D+tales+of+herding&c=0_0&f=0
+      ascii: yes
+      all_entries: no
+      # torrent_info: yes
+    # if:
+    #   - "'title' in entry":
+    #       set:
+    #         metadata_file: "/home/user/finished/{{ entry.title | pathscrub }}_{{ entry.guid | default('no-guid') }}.json"
+    # exec:
+    #   on_output:
+    #     for_accepted:
+    #       - >
+    #         echo '{{ title }}' >> '/home/user/finished/{{ title | pathscrub }}.txt'
+    template: 
+      - anime1080p
   animedl-erairaws:
     rss:
       url: https://nyaa.si/?page=rss&c=1_2&f=0&u=erai-raws
@@ -160,7 +205,11 @@ tasks:
       - download-deluge 
   animedl-shanaproject:
     headers:
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key for anidex.info
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      accept-encoding: "gzip, deflate, br"
+      accept-language: "en-US,en;q=0.9"
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
     rss:
       url: https://www.shanaproject.com/feeds/site/
       ascii: yes
@@ -171,7 +220,11 @@ tasks:
       - download-deluge 
   animedl-animetosho:
     headers:
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key for anidex.info
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      accept-encoding: "gzip, deflate, br"
+      accept-language: "en-US,en;q=0.9"
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
     rss:
       url: https://feed.animetosho.org/rss2?only_tor=1
       ascii: yes
@@ -182,7 +235,11 @@ tasks:
       - download-deluge 
   animedl-tokyotosho:
     headers:
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key for anidex.info
+      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+      accept-encoding: "gzip, deflate, br"
+      accept-language: "en-US,en;q=0.9"
+      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
     rss:
       url: https://www.tokyotosho.info/rss.php?filter=1
       ascii: yes
@@ -200,34 +257,36 @@ tasks:
       - anime_regexp
       - download-deluge 
   # Unfortunately prone for Henti/Porn/Warez that can be difficult to filter out
-  animedl-anidex:
-    headers:
-      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
-      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-      accept-encoding: "gzip, deflate, br"
-      accept-language: "en-US,en;q=0.9"
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
-    cfscraper: yes
-    rss:
-      url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
-      # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
-      ascii: yes
-      all_entries: no
-    template: 
-      - anime_regexp
-      - download-deluge 
+  # animedl-anidex:
+  #   headers:
+  #     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+  #     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+  #     accept-encoding: "gzip, deflate, br"
+  #     accept-language: "en-US,en;q=0.9"
+  #     cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
+  #   cfscraper: yes
+  #   rss:
+  #     url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
+  #     # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
+  #     ascii: yes
+  #     all_entries: no
+  #   template: 
+  #     - anime_regexp
+  #     - download-deluge 
   # This is done primarily as a task to get data from deluge because content_size doesn't work on magnets well during initial filtering
   pause_large_torrents:
-    sleep:
-      seconds: 60 # This should give enough time for most of the torrents/magnets to start and get sizes etc.
+    # sleep:
+    #   seconds: 60 # This should give enough time for most of the torrents/magnets to start and get sizes etc.
     from_deluge: yes
     disable: [seen, seen_info_hash]
     # Pause all torrents larger then 30GB that do not have the label "largeanimeok", Note Deluge labels are always lowercase in flexget
     # And I don't want to deal with some of the stupidly large torrents people post that I either end up downloading (and then deleting)
     # or chew up my Seedbox bandwith
     if:
-      - content_size >= 30720: accept
-      # - deluge_label != "largeanimeok" and content_size >= 30720: accept # 2023/01/31 - For some reason deluge_label isn't available
+      # - content_size >= 30720: accept
+      # 2023/01/31 - For some reason deluge_label isn't available
+      # 2025/04/05 - For some reason content_size is now in bytes not MB
+      - deluge_label != "largeanimeok" and content_size >= 32212254720: accept 
     deluge:
       action: pause
 
