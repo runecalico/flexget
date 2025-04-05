@@ -64,7 +64,7 @@ templates:
               - '\[SSA\]' # Seems some groups are using HEVC etc .. but not mentioning it
         - "1920x1080": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
-              - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
+              - "(AV1|HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
         - "UHD": # Just 720p for now until my main release groups understand how to release sane HEVC/x265 file sizes
             not:
               - "(HEVC|x265|H265|H.265)" # But if they say it's HEVX/x265, it might be a sane file size
@@ -125,7 +125,7 @@ templates:
     accept_all: yes
     #magnets: no # Because the content_size filter only works on torrents
     convert_magnet: # Because the content_size filter only works on torrents
-      timeout: 180 seconds
+      timeout: 240 seconds
     content_size:
       max: 900
       strict: yes
@@ -142,6 +142,15 @@ tasks:
       - anime_regexp
       - bravesail-rename
       - download-deluge
+  # Exception to the Rule on no H264/AVC
+  animedl-taleOfHerdingGods: 
+    rss:
+      url: https://nyaa.si/?page=rss&q=%5BFSP+DN%5D+tales+of+herding&c=0_0&f=0
+      ascii: yes
+      all_entries: no
+    template: 
+      - anime_regexp
+      - download-deluge 
   animedl-erairaws:
     rss:
       url: https://nyaa.si/?page=rss&c=1_2&f=0&u=erai-raws
@@ -212,22 +221,22 @@ tasks:
       - anime_regexp
       - download-deluge 
   # Unfortunately prone for Henti/Porn/Warez that can be difficult to filter out
-  animedl-anidex:
-    headers:
-      User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
-      accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
-      accept-encoding: "gzip, deflate, br"
-      accept-language: "en-US,en;q=0.9"
-      cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
-    cfscraper: yes
-    rss:
-      url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
-      # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
-      ascii: yes
-      all_entries: no
-    template: 
-      - anime_regexp
-      - download-deluge 
+  # animedl-anidex:
+  #   headers:
+  #     User-Agent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36"
+  #     accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"
+  #     accept-encoding: "gzip, deflate, br"
+  #     accept-language: "en-US,en;q=0.9"
+  #     cookie: "__ddgid_=3Qvwc4J3kyTI8AHy; __ddg2_=UAmMGAi25vdjubuB; __ddg1_=gIL8bO82aApP6ufFnisO" #This looks to be the key
+  #   cfscraper: yes
+  #   rss:
+  #     url: https://anidex.info/rss/?cat=1&lang_id=1&group=0&q=&h=0
+  #     # Web equiv: https://anidex.info/?page=search&id=1&lang_id=1&group_id=0&q=
+  #     ascii: yes
+  #     all_entries: no
+  #   template: 
+  #     - anime_regexp
+  #     - download-deluge 
   # This is done primarily as a task to get data from deluge because content_size doesn't work on magnets well during initial filtering
   pause_large_torrents:
     sleep:
@@ -238,8 +247,8 @@ tasks:
     # And I don't want to deal with some of the stupidly large torrents people post that I either end up downloading (and then deleting)
     # or chew up my Seedbox bandwith
     if:
-      - content_size >= 30720: accept
-      # - deluge_label != "largeanimeok" and content_size >= 30720: accept # 2023/01/31 - For some reason deluge_label isn't available
+      # - content_size >= 30720: accept
+      - deluge_label != "largeanimeok" and content_size >= 30720: accept # 2023/01/31 - For some reason deluge_label isn't available
     deluge:
       action: pause
 

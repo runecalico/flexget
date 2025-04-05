@@ -1,7 +1,7 @@
 # Ubuntu 20.04LTS+
 # Run in your virtual ENV to install flexget
 # source ~/flexget/bin/activate
-pip3 install --upgrade pip
+pip3 install --upgrade pip # To Upgrade: python3 -m pip install --upgrade pip
 pip3 install --upgrade setuptools
 pip3 install --upgrade libtorrent
 pip3 install --upgrade guppy3

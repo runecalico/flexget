@@ -48,6 +48,15 @@ tasks:
     from_deluge: yes
     disable: [seen, seen_info_hash]
     if:
-    - deluge_all_time_download == 0 and ((now - timedelta(days=3)).timestamp() > deluge_time_added) : accept
+    - deluge_all_time_download == 0 and ((now - timedelta(days=7)).timestamp() > deluge_time_added) : accept
     deluge:
       action: purge    
+
+  Cleanup_old_largeAnime:
+    priority: 5
+    from_deluge: yes
+    disable: [seen, seen_info_hash]
+    if:
+    - deluge_label != "largeanimeok" and deluge_state == "Paused" and ((now - timedelta(days=21)).timestamp() > deluge_time_added) : accept
+    deluge:
+      action: purge
